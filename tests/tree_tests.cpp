@@ -18,4 +18,7 @@ BOOST_AUTO_TEST_CASE(tree_test2)
   Tree t;
   BOOST_CHECK_THROW(t.parse("(S (A a) (B b))("), ParseException);
   BOOST_CHECK_THROW(t.parse("((S (A a) (B b))"), ParseException);
+  BOOST_CHECK_THROW(t.parse("(S (A a) (B b)) (S a)"), ParseException);
+  BOOST_CHECK_THROW(t.parse("S (A a) (B b)"), ParseException);
+  BOOST_CHECK_THROW(t.parse("(S (A (a) (B b))"), ParseException);
 }
