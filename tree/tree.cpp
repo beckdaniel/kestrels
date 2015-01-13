@@ -13,20 +13,7 @@ Tree::Tree(){}
 
 Tree::Tree(const string& s){
   this->parse(s);
-  //cout << this->symbol << endl;
-  //cout << this->children[0]->symbol << endl;
-  //cout << this->children[1]->symbol << endl;
-  //cout << this->children[0]->children[0]->symbol << endl;
-  //cout << this->to_str() << endl;
 }
-
-//Tree::Tree(const Tree& other){
-//  this->symbol = other->symbol;
-//  vector<Tree*>::iterator it;
-//  for (it = other->children.begin() ; it != other->children.end(); it++){
-//    this->children.push_back(Tree(
-//  }
-//}
 
 string Tree::to_str(){
   stringstream result;
@@ -36,11 +23,7 @@ string Tree::to_str(){
   vector<Tree*>::iterator it;
   for (it = this->children.begin() ; it != this->children.end(); it++){
     result << (*it)->to_str();
-    //result << (*it)->symbol;
-    //cout << this->children[0]->symbol << endl;
-    //cout << this->children[1]->symbol << endl;
   }
-  //result << this->children.size();
   result << ")";
   return result.str();
 }
@@ -54,7 +37,6 @@ void Tree::parse(const string& s){
   string token_pattern;
   token_pattern = str(format("%s\\s*(%s)?|%s|(%s)") % open_pattern % node_pattern
 		      % close_pattern % leaf_pattern);
-  //regex token_re("\\(\\s*([^\\s\\(\\)]+)?|\\)|([^\\s\\(\\)]+)");
   regex token_re(token_pattern);
   vector<Tree*> stack;
   Tree* t =  new Tree();
