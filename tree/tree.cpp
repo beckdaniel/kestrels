@@ -39,9 +39,9 @@ void Tree::parse(const string& s){
     cout << token << endl;
       
     // Beginning of a tree/subtree
-    //if (token[0] == "\\("){
-    //  label= token.substr(1);
-    //}
+    if (token[0] == "\\("){
+      label= token.substr(1);
+    }
 
 
     // update search position:
