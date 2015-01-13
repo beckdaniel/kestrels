@@ -20,9 +20,9 @@ string Tree::to_str(){
   stringstream result;
   result << "(";
   result << this->symbol;
-  result << " ";
   vector<Tree*>::iterator it;
   for (it = this->children.begin() ; it != this->children.end(); it++){
+    result << " ";
     result << (*it)->to_str();
   }
   result << ")";
