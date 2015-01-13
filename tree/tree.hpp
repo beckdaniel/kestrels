@@ -12,7 +12,7 @@ struct Node{
   int node_id;
   ChildrenIDs children_ids;
   Node(){};
-  Node(const std::string& s){this->production = s;};
+  Node(const std::string& s){this->production = s; this->node_id = 0;};
   std::string to_str();
 };
 

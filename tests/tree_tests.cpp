@@ -61,6 +61,7 @@ BOOST_AUTO_TEST_CASE(tree_node_list)
   //cout << "BLAH2" << endl;
   for (int i = 0; i < node_list.size(); i++){
     //cout << i << endl;
-    BOOST_CHECK_EQUAL(result[i], node_list[i]);
+    cout << result[i]->to_str() << " " << node_list[i]->to_str() << endl;
+    BOOST_CHECK_EQUAL(result[i]->to_str(), node_list[i]->to_str());
   }
 }

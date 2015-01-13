@@ -1,9 +1,12 @@
 #include <boost/regex.hpp>
 #include <boost/format.hpp> 
 #include <boost/algorithm/string.hpp>
+#include <boost/foreach.hpp>
 #include <vector>
+#include <map>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include "tree.hpp"
 
 using namespace std;
@@ -18,6 +21,10 @@ string Node::to_str(){
     result << *it << " ";
   result << "]";
   return result.str();
+}
+
+bool compare_nodes(const Node* node1, const Node* node2){
+  return (node1->production < node2->production);
 }
 
 Tree::Tree(){}
@@ -113,6 +120,22 @@ void Tree::parse(const string& s){
 NodeList Tree::get_node_list(){
   NodeList temp_list;
   int temp = this->add_node(this, temp_list);
+  std::sort(temp_list.begin(), temp_list.end(), compare_nodes);
+  map<int, int> ids_converter;
+  for (int i = 0; i < temp_list.size(); i++)
+    ids_converter[temp_list[i]->node_id] = i;
+
+  NodeList node_list;
+  NodeList::iterator it;
+  //for (it = temp_list.begin(); it != temp_list.end();
+  BOOST_FOREACH( Node* node, temp_list ) {
+    cout << node->to_str() << endl;
+    node->node_id = 0;
+    for (int i = 0; i < node->children_ids.size(); i++) {
+      node->children_ids[i] = ids_converter[node->children_ids[i]];
+    }
+    cout << node->to_str() << endl;
+  }
   return temp_list;
 }
 
