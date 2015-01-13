@@ -3,6 +3,17 @@
 
 #include <string>
 #include <vector>
+#include <exception>
+
+class ParseException: public std::exception{
+public:
+  ParseException(const std::string m) : msg(m) {}
+  ~ParseException() throw() {}
+  const char* what() { return msg.c_str(); }
+
+private:
+  std::string msg;
+};
 
 class Tree{
 public:
@@ -11,7 +22,6 @@ public:
 
   Tree();
   Tree(const std::string& s);
-  //Tree(const Tree& other);
   std::string to_str();
   void parse(const std::string& s);
 
