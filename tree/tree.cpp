@@ -52,11 +52,12 @@ void Tree::parse(const string& s){
   string token;
 
   while (regex_search(start, end, what, token_re)){
-    vector<Tree*>::iterator it;
     token = string(what[0].first, what[0].second);
       
     // Beginning of a tree/subtree
     if (token[0] == '('){
+      if ((stack.size() == 1) && (stack[0]->children.size() > 0))
+	throw ParseException("Error on beginning of a tree");
       label = token.substr(1);
       trim(label);
       t = new Tree();
