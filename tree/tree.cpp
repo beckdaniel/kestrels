@@ -16,6 +16,7 @@ Tree::Tree(const string& s){
 }
 
 string Tree::to_str(){
+  if (this->children.size() == 0) return this->symbol;
   stringstream result;
   result << "(";
   result << this->symbol;

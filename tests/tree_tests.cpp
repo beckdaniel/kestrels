@@ -7,5 +7,6 @@ BOOST_AUTO_TEST_CASE(tree_test)
 {
   Tree tree1("(S (A a) (B b))");
   BOOST_CHECK_EQUAL(tree1.symbol, "S");
-  //BOOST_CHECK_EQUAL(tree1.children[0]->symbol, "A");
+  BOOST_CHECK_EQUAL(tree1.children[0]->symbol, "A");
+  BOOST_CHECK_EQUAL(tree1.to_str(), "(S (A a)(B b))");
 }
