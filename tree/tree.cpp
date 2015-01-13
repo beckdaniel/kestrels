@@ -137,7 +137,7 @@ int Tree::add_node(const Tree* tree, NodeList& temp_list){
   //cout << production.str() << endl;
   node->production = production.str();
   node->node_id = temp_list.size();
-  cout << node->to_str() << endl;
+  //cout << node->to_str() << endl;
   temp_list.push_back(node);
   return node->node_id;
 }

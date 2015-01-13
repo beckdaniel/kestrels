@@ -56,11 +56,11 @@ BOOST_AUTO_TEST_CASE(tree_node_list)
   node_list[4]->children_ids.push_back(6);
   node_list[6]->children_ids.push_back(5);
   
-  cout << "BLAH" << endl;
+  //cout << "BLAH" << endl;
   NodeList result = tree1.get_node_list();
-  cout << "BLAH2" << endl;
+  //cout << "BLAH2" << endl;
   for (int i = 0; i < node_list.size(); i++){
-    cout << i << endl;
+    //cout << i << endl;
     BOOST_CHECK_EQUAL(result[i], node_list[i]);
   }
 }
