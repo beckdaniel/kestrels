@@ -41,7 +41,7 @@ void Tree::parse(const string& s){
   regex token_re(token_pattern);
   vector<Tree*> stack;
   Tree* t =  new Tree();
-  t->symbol = "ROOT";
+  t->symbol = "START";
   stack.push_back(t);
 
   string::const_iterator start, end;
@@ -57,7 +57,7 @@ void Tree::parse(const string& s){
     // Beginning of a tree/subtree
     if (token[0] == '('){
       if ((stack.size() == 1) && (stack[0]->children.size() > 0))
-	throw ParseException("Error on beginning of a tree");
+	throw ParseException(str(format("Error on the beginning of a tree. Token: %s") % token));
       label = token.substr(1);
       trim(label);
       t = new Tree();
@@ -67,6 +67,8 @@ void Tree::parse(const string& s){
 
     // End of a tree/subtree
     else if (token == ")"){
+      if (stack.size() == 1)
+	throw ParseException(str(format("Error on the end of a tree. Token: %s") % token));
       t = stack.back();
       stack.pop_back();
       stack.back()->children.push_back(t);
@@ -74,6 +76,8 @@ void Tree::parse(const string& s){
 
     // Leaf node
     else {
+      if (stack.size() == 1)
+	throw ParseException(str(format("Error on a leaf node. Token: %s") % token));
       trim(token);
       t = new Tree();
       t->symbol = token;
@@ -83,6 +87,13 @@ void Tree::parse(const string& s){
     // update search position:
     start = what[0].second;
   }
+
+  // check if we have only one complete tree.
+  if ((stack.size() > 1) || (stack[0]->children.size() == 0))
+    throw ParseException("Error on the end of parsing");
+  else if ((stack[0]->symbol != "START") || (stack[0]->children.size() != 1))
+    throw ParseException("Error on the end of parsing");
+
   this->symbol = stack[0]->children[0]->symbol;
   this->children = vector<Tree*>(stack[0]->children[0]->children);
 }

@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE(tree_test)
 
 BOOST_AUTO_TEST_CASE(tree_test2)
 {
-  string s = "(S (A a) (B b))(";
   Tree t;
-  BOOST_CHECK_THROW(t.parse(s), ParseException);
+  BOOST_CHECK_THROW(t.parse("(S (A a) (B b))("), ParseException);
+  BOOST_CHECK_THROW(t.parse("((S (A a) (B b))"), ParseException);
 }
