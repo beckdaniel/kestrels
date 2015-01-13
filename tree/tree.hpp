@@ -11,7 +11,10 @@ public:
 
   Tree();
   Tree(const std::string& s);
+  //Tree(const Tree& other);
+  std::string to_str();
   void parse(const std::string& s);
+
 };
 
 #endif //TREE_H
