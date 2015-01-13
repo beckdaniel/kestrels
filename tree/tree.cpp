@@ -9,6 +9,17 @@
 using namespace std;
 using namespace boost;
 
+string Node::to_str(){
+  stringstream result;
+  result << this->production;
+  result << " " << this->node_id << " [ ";
+  ChildrenIDs::iterator it;
+  for (it = this->children_ids.begin(); it != this->children_ids.end(); it++)
+    result << *it << " ";
+  result << "]";
+  return result.str();
+}
+
 Tree::Tree(){}
 
 Tree::Tree(const string& s){
@@ -96,4 +107,37 @@ void Tree::parse(const string& s){
 
   this->symbol = stack[0]->children[0]->symbol;
   this->children = vector<Tree*>(stack[0]->children[0]->children);
+  delete t;
+}
+
+NodeList Tree::get_node_list(){
+  NodeList temp_list;
+  int temp = this->add_node(this, temp_list);
+  return temp_list;
+}
+
+int Tree::add_node(const Tree* tree, NodeList& temp_list){
+  if (tree->children.size() == 0)
+    return -1;
+  stringstream production;
+  production << tree->symbol;
+  //cout << production.str() << endl;
+  //cout << tree->children.size() << endl;
+
+  Node* node = new Node();
+  vector<Tree*>::const_iterator it;
+  int ch_id;
+  for (it = tree->children.begin(); it != tree->children.end(); it++){
+    production << " " << (*it)->symbol;
+    //cout << production.str() << endl;
+    ch_id = this->add_node(*it, temp_list);
+    if (ch_id != -1)
+      node->children_ids.push_back(ch_id);
+  }
+  //cout << production.str() << endl;
+  node->production = production.str();
+  node->node_id = temp_list.size();
+  cout << node->to_str() << endl;
+  temp_list.push_back(node);
+  return node->node_id;
 }
