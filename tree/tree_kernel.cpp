@@ -37,7 +37,7 @@ void SymbolAwareSubsetTreeKernel::Kdiag(const vector<string>& trees,
 					vector<KernelResult>& result){
   this->build_cache(trees);
   BOOST_FOREACH(string tree_repr, trees){
-    result.push_back(KernelResult());
+    result.push_back(KernelResult(this->lambda.size(), this->alpha.size()));
     NodeList nodes = this->tree_cache[tree_repr];
     this->compute_kernel(nodes, nodes, result.back());
   }
@@ -68,7 +68,7 @@ void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList& nodes1,
   }
   vector<IDPair> id_pairs;
   this->get_node_pairs(nodes1, nodes2, id_pairs);
-  KernelResult temp_result;
+  KernelResult temp_result = KernelResult(lambda_size, alpha_size);
   BOOST_FOREACH(IDPair id_pair, id_pairs){
     this->delta(id_pair, nodes1, nodes2, kernel_result, temp_result,
 		delta_matrix, dlambda_tensor, dalpha_tensor);
@@ -124,9 +124,9 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
 					KernelResult& temp_result, double* delta_matrix,
 					double* dlambda_tensor,	double* dalpha_tensor){
   // DEBUG
-  kernel_result.k = 6.0;
-  kernel_result.dlambda = {0.0};
-  kernel_result.dalpha = {0.0};
+  //kernel_result.k = 6.0;
+  //kernel_result.dlambda = {0.0};
+  //kernel_result.dalpha = {0.0};
   cout << id_pair.first << " " << id_pair.second << endl;
   // END DEBUG
 
@@ -140,7 +140,37 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
 
   // RECURSIVE CASE: get value from DP matrix if it was calculated before
   if (val > 0){
-    
+    temp_result.k = 0;
+    for (int i = 0; i < lambda_size; ++i)
+      temp_result.dlambda[i] = dlambda_tensor[index * lambda_size + i];
+    for (int i = 0; i < alpha_size; ++i)
+      temp_result.dalpha[i] = dalpha_tensor[index * alpha_size + i];
+    return;
   }
-    
+  
+  // BASE CASE: found a preterminal
+  Node* node1 = nodes1[id1];
+  //int lambda_index = node1.lambda_index TODO
+  int lambda_index = 0;
+  if (node1->children_ids.empty()){
+    delta_matrix[index] = this->lambda[lambda_index];
+    temp_result.k = this->lambda[lambda_index];
+    kernel_result.k += this->lambda[lambda_index];
+
+    for (int i = 0; i < lambda_size; ++i){
+      if (i == lambda_index){
+	temp_result.dlambda[i] = 1;
+	kernel_result.dlambda[i] += 1;
+	dlambda_tensor[index * lambda_size + i] = 1;
+      } else {
+	temp_result.dlambda[i] = 0;
+      }
+    }
+    for (int i = 0; i < alpha_size; ++i)
+      temp_result.dalpha[index * alpha_size + i] = 0;
+    return;
+  }
+
+  
+
 }
