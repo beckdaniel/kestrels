@@ -34,11 +34,16 @@ void SymbolAwareSubsetTreeKernel::build_cache(const vector<string> &trees){
 
 
 void SymbolAwareSubsetTreeKernel::Kdiag(const vector<string> &trees,
-					vector<float> &result){
-  //this->build_cache(trees);
+					vector<KernelResult> &result){
+  this->build_cache(trees);
   BOOST_FOREACH(string tree_repr, trees){
+    // DEBUG
     cout << tree_repr << endl;
-    result.push_back(6.0);
+    BOOST_FOREACH(Node* node, this->tree_cache[tree_repr]){
+      cout << node->to_str() << endl;
+    }
+    result.push_back({6.0, {0.0}, {0.0}});
+    // END DEBUG
     //this->
   }
 }

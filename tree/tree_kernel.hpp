@@ -23,7 +23,8 @@ public:
   SymbolAwareSubsetTreeKernel(const std::vector<float>& lambda, bool normalize);
   SymbolAwareSubsetTreeKernel(const std::vector<float>& lambda,
 			      const std::vector<float>& alpha, bool normalize);
-  void Kdiag(const std::vector<std::string>& trees, std::vector<float>& result);
+  void Kdiag(const std::vector<std::string>& trees,
+	     std::vector<KernelResult>& result);
   void compute_kernel(const NodeList& nodes1, const NodeList& nodes2,
 		      KernelResult& kernel_result);
 
