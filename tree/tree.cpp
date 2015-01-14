@@ -38,10 +38,9 @@ string Tree::to_str(){
   stringstream result;
   result << "(";
   result << this->symbol;
-  vector<Tree*>::iterator it;
-  for (it = this->children.begin() ; it != this->children.end(); it++){
+  BOOST_FOREACH( Tree* child, this->children ){
     result << " ";
-    result << (*it)->to_str();
+    result << child->to_str();
   }
   result << ")";
   return result.str();
@@ -140,9 +139,9 @@ int Tree::add_node(const Tree* tree, NodeList& node_list){
   production << tree->symbol;
   Node* node = new Node();
   int ch_id;
-  BOOST_FOREACH( Tree* tree, tree->children ){
-    production << " " << tree->symbol;
-    ch_id = this->add_node(tree, node_list);
+  BOOST_FOREACH( Tree* child, tree->children ){
+    production << " " << child->symbol;
+    ch_id = this->add_node(child, node_list);
     if (ch_id != -1)
       node->children_ids.push_back(ch_id);
   }
