@@ -14,13 +14,31 @@ struct SimpleTree{
   ~SimpleTree() {};
 
   vector<string> trees;
-  //vector<float> lambda;
 };
 
-BOOST_FIXTURE_TEST_CASE(kdiag_tests, SimpleTree)
-{
+BOOST_FIXTURE_TEST_CASE(kdiag1, SimpleTree){
   vector<float> lambda = {1.0};
-  //lambda.push_back(1.0);
   SASSTK kernel = SASSTK(lambda, false);
   BOOST_CHECK_EQUAL(kernel.Kdiag(trees)[0], 6);
+};
+
+BOOST_FIXTURE_TEST_CASE(kdiag2, SimpleTree){
+  vector<float> lambda = {1.0, 0.5};
+  vector<float> alpha = {0.0, 1.0};
+  SASSTK kernel = SASSTK(lambda, alpha, false);
+  BOOST_CHECK_EQUAL(kernel.Kdiag(trees)[0], 3);
+}
+
+BOOST_FIXTURE_TEST_CASE(kdiag3, SimpleTree){
+  vector<float> lambda = {1.0, 0.5};
+  vector<float> alpha = {0.2, 1.0};
+  SASSTK kernel = SASSTK(lambda, alpha, false);
+  BOOST_CHECK_EQUAL(kernel.Kdiag(trees)[0], 3.44);
+}
+
+BOOST_FIXTURE_TEST_CASE(kdiag4, SimpleTree){
+  vector<float> lambda = {0.6, 0.5};
+  vector<float> alpha = {1.0, 1.0};
+  SASSTK kernel = SASSTK(lambda, alpha, false);
+  BOOST_CHECK_EQUAL(kernel.Kdiag(trees)[0], 2.736);
 }

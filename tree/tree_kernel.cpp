@@ -4,8 +4,19 @@
 
 using namespace std;
 
-SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<float> &lambda, bool normalize){
+SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<float> &lambda, 
+							 bool normalize){
   this->normalize = normalize;
+  this->lambda = vector<float>(lambda);
+  this->alpha.push_back(0.0);
+}
+
+SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<float> &lambda, 
+							 const vector<float> &alpha,
+							 bool normalize){
+  this->normalize = normalize;
+  this->lambda = vector<float>(lambda);
+  this->alpha = vector<float>(alpha);
 }
 
 vector<float> SymbolAwareSubsetTreeKernel::Kdiag(const vector<string> &trees){
