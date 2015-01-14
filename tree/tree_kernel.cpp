@@ -73,6 +73,11 @@ void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList& nodes1,
   }
   vector<IDPair> id_pairs;
   this->get_node_pairs(nodes1, nodes2, id_pairs);
+  //DEBUG
+  BOOST_FOREACH(IDPair id_pair, id_pairs){
+    cout << id_pair.first << " " << id_pair.second << endl;
+  }
+  //END DEBUG
   free(delta_matrix);
   free(dlambda_tensor);
   free(dalpha_tensor);
@@ -81,7 +86,41 @@ void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList& nodes1,
 void SymbolAwareSubsetTreeKernel::get_node_pairs(const NodeList& nodes1,
 						 const NodeList& nodes2,
 						 vector<IDPair>& id_pairs){
-
+  int len1 = nodes1.size();
+  int len2 = nodes2.size();
+  int i1 = 0;
+  int i2 = 0;
+  int reset;
+  Node* n1;
+  Node* n2;
+  while (true){
+    if ((i1 >= len1) || (i2 >= len2))
+      return;
+    n1 = nodes1[i1];
+    n2 = nodes2[i2];
+    if (n1->production > n2->production)
+      i2 += 1;
+    else if (n1->production < n2->production)
+      i1 += 1;
+    else {
+      while (n1->production == n2->production){
+	reset = i2;
+	while (n1->production == n2->production){
+	  id_pairs.push_back(IDPair({i1, i2}));
+	  i2 += 1;
+	  if (i2 >= len2)
+	    break;
+	  n2 = nodes2[i2];
+	}
+	i1 += 1;
+	if (i1 >= len1)
+	  return;
+	i2 = reset;
+	n1 = nodes1[i1];
+	n2 = nodes2[i2];
+      }
+    }
+  }
 }
 
 void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& nodes1,
