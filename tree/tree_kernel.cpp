@@ -4,19 +4,19 @@
 
 using namespace std;
 
-SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<float> &lambda, 
+SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<double> &lambda, 
 							 bool normalize){
   this->normalize = normalize;
-  this->lambda = vector<float>(lambda);
+  this->lambda = vector<double>(lambda);
   this->alpha.push_back(0.0);
 }
 
-SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<float> &lambda, 
-							 const vector<float> &alpha,
+SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<double> &lambda, 
+							 const vector<double> &alpha,
 							 bool normalize){
   this->normalize = normalize;
-  this->lambda = vector<float>(lambda);
-  this->alpha = vector<float>(alpha);
+  this->lambda = vector<double>(lambda);
+  this->alpha = vector<double>(alpha);
 }
 
 void SymbolAwareSubsetTreeKernel::build_cache(const vector<string> &trees){
@@ -47,9 +47,13 @@ void SymbolAwareSubsetTreeKernel::Kdiag(const vector<string> &trees,
 void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList &nodes1,
 						 const NodeList &nodes2,
 						 KernelResult &kernel_result){
+  // DEBUG
   kernel_result.k = 6.0;
   kernel_result.dlambda = {0.0};
   kernel_result.dalpha = {0.0};
+  // END DEBUG
+
+  //double*
 }
 
 
