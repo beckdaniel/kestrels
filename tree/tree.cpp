@@ -139,11 +139,10 @@ int Tree::add_node(const Tree* tree, NodeList& node_list){
   stringstream production;
   production << tree->symbol;
   Node* node = new Node();
-  vector<Tree*>::const_iterator it;
   int ch_id;
-  for (it = tree->children.begin(); it != tree->children.end(); it++){
-    production << " " << (*it)->symbol;
-    ch_id = this->add_node(*it, node_list);
+  BOOST_FOREACH( Tree* tree, tree->children ){
+    production << " " << tree->symbol;
+    ch_id = this->add_node(tree, node_list);
     if (ch_id != -1)
       node->children_ids.push_back(ch_id);
   }
