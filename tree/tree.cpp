@@ -115,8 +115,8 @@ void Tree::parse(const string& s){
   delete t;
 }
 
-NodeList Tree::get_node_list(){
-  NodeList node_list;
+void Tree::get_node_list(NodeList& node_list){
+  //NodeList node_list;
   int temp = this->add_node(this, node_list);
   std::sort(node_list.begin(), node_list.end(), compare_nodes);
   map<int, int> ids_converter;
@@ -128,7 +128,7 @@ NodeList Tree::get_node_list(){
       node->children_ids[i] = ids_converter[node->children_ids[i]];
     }
   }
-  return node_list;
+  //return node_list;
 }
 
 int Tree::add_node(const Tree* tree, NodeList& node_list){

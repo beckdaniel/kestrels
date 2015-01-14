@@ -31,8 +31,8 @@ public:
 private:
   void build_cache(const std::vector<std::string> &trees);
   void delta(const IDPair &id_pair, const NodeList &nodes1,
-	     const NodeList &nodes2, double *delta_matrix,
-	     double *dlambda_tensor, double *dsigma_tensor);
+	     const NodeList &nodes2, double* delta_matrix,
+	     double* dlambda_tensor, double* dsigma_tensor);
 };
 
 #endif //TREE_KERNEL_H

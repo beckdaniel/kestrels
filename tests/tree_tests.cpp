@@ -58,7 +58,8 @@ BOOST_AUTO_TEST_CASE(tree_node_list)
   node_list[6]->children_ids.push_back(5);
   node_list[6]->children_ids.push_back(1);
   
-  NodeList result = tree1.get_node_list();
+  NodeList result;
+  tree1.get_node_list(result);
   for (int i = 0; i < node_list.size(); i++){
     BOOST_CHECK_EQUAL(result[i]->to_str(), node_list[i]->to_str());
   }

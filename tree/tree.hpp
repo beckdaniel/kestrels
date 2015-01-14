@@ -37,10 +37,10 @@ public:
   Tree(const std::string& s);
   std::string to_str();
   void parse(const std::string& s);
-  NodeList get_node_list();
+  void get_node_list(NodeList& node_list);
 
 private:
-  int add_node(const Tree* tree, NodeList& temp_list);
+  int add_node(const Tree* tree, NodeList& node_list);
 
 };
 
