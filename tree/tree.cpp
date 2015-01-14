@@ -16,9 +16,8 @@ string Node::to_str(){
   stringstream result;
   result << this->production;
   result << " " << this->node_id << " [ ";
-  ChildrenIDs::iterator it;
-  for (it = this->children_ids.begin(); it != this->children_ids.end(); it++)
-    result << *it << " ";
+  BOOST_FOREACH( int ch_id, this->children_ids )
+    result << ch_id << " ";
   result << "]";
   return result.str();
 }
