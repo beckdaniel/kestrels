@@ -31,6 +31,8 @@ public:
 
 private:
   void build_cache(const std::vector<std::string>& trees);
+  void get_node_pairs(const NodeList& nodes1, const NodeList& nodes2,
+		      std::vector<IDPair>& id_pairs);
   void delta(const IDPair& id_pair, const NodeList& nodes1,
 	     const NodeList& nodes2, double* delta_matrix,
 	     double* dlambda_tensor, double* dalpha_tensor);

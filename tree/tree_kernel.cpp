@@ -33,8 +33,8 @@ void SymbolAwareSubsetTreeKernel::build_cache(const vector<string> &trees){
 }
 
 
-void SymbolAwareSubsetTreeKernel::Kdiag(const vector<string> &trees,
-					vector<KernelResult> &result){
+void SymbolAwareSubsetTreeKernel::Kdiag(const vector<string>& trees,
+					vector<KernelResult>& result){
   this->build_cache(trees);
   BOOST_FOREACH(string tree_repr, trees){
     result.push_back(KernelResult());
@@ -44,9 +44,9 @@ void SymbolAwareSubsetTreeKernel::Kdiag(const vector<string> &trees,
 }
 
 
-void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList &nodes1,
-						 const NodeList &nodes2,
-						 KernelResult &kernel_result){
+void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList& nodes1,
+						 const NodeList& nodes2,
+						 KernelResult& kernel_result){
   // DEBUG
   kernel_result.k = 6.0;
   kernel_result.dlambda = {0.0};
@@ -71,17 +71,21 @@ void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList &nodes1,
 	dalpha_tensor[index * alpha_size + k] = 0;
     }
   }
-
   vector<IDPair> id_pairs;
+  this->get_node_pairs(nodes1, nodes2, id_pairs);
   free(delta_matrix);
   free(dlambda_tensor);
   free(dalpha_tensor);
 }
 
+void SymbolAwareSubsetTreeKernel::get_node_pairs(const NodeList& nodes1,
+						 const NodeList& nodes2,
+						 vector<IDPair>& id_pairs){
 
+}
 
-void SymbolAwareSubsetTreeKernel::delta(const IDPair &id_pair, const NodeList &nodes1,
-					const NodeList &nodes2, double* delta_matrix,
+void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& nodes1,
+					const NodeList& nodes2, double* delta_matrix,
 					double* dlambda_tensor, double* dalpha_tensor){
 
 }
