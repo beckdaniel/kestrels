@@ -20,18 +20,18 @@ public:
   std::vector<float> alpha;
   std::unordered_map<std::string, NodeList> tree_cache;
 
-  SymbolAwareSubsetTreeKernel(const std::vector<float> &lambda, bool normalize);
-  SymbolAwareSubsetTreeKernel(const std::vector<float> &lambda,
-			      const std::vector<float> &alpha, bool normalize);
-  std::vector<float> Kdiag(const std::vector<std::string> &trees);
-  void compute_kernel(const NodeList &nodes1, const NodeList &nodes2,
-		      KernelResult &kernel_result);
+  SymbolAwareSubsetTreeKernel(const std::vector<float>& lambda, bool normalize);
+  SymbolAwareSubsetTreeKernel(const std::vector<float>& lambda,
+			      const std::vector<float>& alpha, bool normalize);
+  void Kdiag(const std::vector<std::string>& trees, std::vector<float>& result);
+  void compute_kernel(const NodeList& nodes1, const NodeList& nodes2,
+		      KernelResult& kernel_result);
 
 
 private:
-  void build_cache(const std::vector<std::string> &trees);
-  void delta(const IDPair &id_pair, const NodeList &nodes1,
-	     const NodeList &nodes2, double* delta_matrix,
+  void build_cache(const std::vector<std::string>& trees);
+  void delta(const IDPair& id_pair, const NodeList& nodes1,
+	     const NodeList& nodes2, double* delta_matrix,
 	     double* dlambda_tensor, double* dsigma_tensor);
 };
 
