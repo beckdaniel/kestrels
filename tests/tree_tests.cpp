@@ -49,12 +49,14 @@ BOOST_AUTO_TEST_CASE(tree_node_list)
   node_list.push_back(new Node("NP ADJ N"));
   node_list.push_back(new Node("S NP VP"));
   node_list.push_back(new Node("V sleep"));
-  node_list.push_back(new Node("VP V AD"));
+  node_list.push_back(new Node("VP V ADV"));
 
   node_list[3]->children_ids.push_back(0);
+  node_list[3]->children_ids.push_back(2);
   node_list[4]->children_ids.push_back(3);
   node_list[4]->children_ids.push_back(6);
   node_list[6]->children_ids.push_back(5);
+  node_list[6]->children_ids.push_back(1);
   
   //cout << "BLAH" << endl;
   NodeList result = tree1.get_node_list();

@@ -125,8 +125,8 @@ NodeList Tree::get_node_list(){
   for (int i = 0; i < temp_list.size(); i++)
     ids_converter[temp_list[i]->node_id] = i;
 
-  NodeList node_list;
-  NodeList::iterator it;
+  //NodeList node_list;
+  //NodeList::iterator it;
   //for (it = temp_list.begin(); it != temp_list.end();
   BOOST_FOREACH( Node* node, temp_list ) {
     cout << node->to_str() << endl;
@@ -134,8 +134,13 @@ NodeList Tree::get_node_list(){
     for (int i = 0; i < node->children_ids.size(); i++) {
       node->children_ids[i] = ids_converter[node->children_ids[i]];
     }
-    cout << node->to_str() << endl;
+    //node_list.push_back(node);
+    //cout << node->to_str() << endl;
   }
+  //cout << "FINAL LIST" << endl;
+  //BOOST_FOREACH( Node* node, node_list ) {
+  //  cout << node->to_str() << endl;
+  //}
   return temp_list;
 }
 
