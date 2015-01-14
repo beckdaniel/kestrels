@@ -156,7 +156,6 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
     delta_matrix[index] = this->lambda[lambda_index];
     temp_result.k = this->lambda[lambda_index];
     kernel_result.k += this->lambda[lambda_index];
-
     for (int i = 0; i < lambda_size; ++i){
       if (i == lambda_index){
 	temp_result.dlambda[i] = 1;
@@ -175,5 +174,55 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
   double prod = 1;
   double sum_lambda = 0;
   double sum_alpha = 0;
-  double g = 0;
+  double g = 1;
+  double denom;
+  vector<double> vec_lambda;
+  vector<double> vec_alpha;
+  vec_lambda.assign(lambda_size, 0);
+  vec_alpha.assign(alpha_size, 0);
+  ChildrenIDs children1 = node1->children_ids;
+  ChildrenIDs children2 = node2->children_ids;
+  //int alpha_index = node1.alpha_index TODO
+  int alpha_index = 0;
+  IDPair child_pair;
+  for (int i = 0; i < children1.size(); ++i){
+    child_pair = {children1[i], children2[i]};
+    if (nodes1[child_pair.first]->production == nodes2[child_pair.second]->production){
+      this->delta(child_pair, nodes1, nodes2, kernel_result, temp_result,
+		  delta_matrix, dlambda_tensor, dalpha_tensor);
+      denom = this->alpha[alpha_index] + temp_result.k;
+      g *= denom;
+      for (int j = 0; j < lambda_size; ++j)
+	vec_lambda[j] += (temp_result.dlambda[j] / denom);
+      for (int j = 0; j < alpha_size; ++j){
+	if (j == alpha_index)
+	  vec_alpha[j] += ((1 + temp_result.dalpha[j]) / denom);
+	else
+	  vec_alpha[j] += (temp_result.dalpha[j] / denom);
+      }
+    } else {
+      g *= this->alpha[alpha_index];
+      vec_alpha[alpha_index] += 1 / this->alpha[alpha_index];
+    }
+  }
+  double delta_result, dlambda_result, dalpha_result;
+  delta_result = this->lambda[lambda_index] * g;
+  delta_matrix[index] = delta_result;
+  temp_result.k = delta_result;
+  kernel_result.k += delta_result;
+  for (int i = 0; i < lambda_size; ++i){
+    dlambda_result = delta_result * vec_lambda[i];
+    if (i == lambda_index)
+      dlambda_result += g;
+    dlambda_tensor[index * lambda_size + i] = dlambda_result;
+    temp_result.dlambda[i] = dlambda_result;
+    kernel_result.dlambda[i] += dlambda_result;
+  } 
+  for (int i = 0; i < alpha_size; ++i){
+    dalpha_result = delta_result * vec_alpha[i];
+    dalpha_tensor[index * alpha_size + i] = dalpha_result;
+    temp_result.dalpha[i] = dalpha_result;
+    kernel_result.dalpha[i] += dalpha_result;
+  }
 }
+
