@@ -10,7 +10,7 @@ typedef std::pair<int, int> IDPair;
 struct KernelResult{
   float k;
   std::vector<float> dlambda;
-  std::vector<float> dsigma;
+  std::vector<float> dalpha;
 };
 
 class SymbolAwareSubsetTreeKernel{

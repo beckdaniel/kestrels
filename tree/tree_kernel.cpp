@@ -37,14 +37,9 @@ void SymbolAwareSubsetTreeKernel::Kdiag(const vector<string> &trees,
 					vector<KernelResult> &result){
   this->build_cache(trees);
   BOOST_FOREACH(string tree_repr, trees){
-    // DEBUG
-    cout << tree_repr << endl;
-    BOOST_FOREACH(Node* node, this->tree_cache[tree_repr]){
-      cout << node->to_str() << endl;
-    }
-    result.push_back({6.0, {0.0}, {0.0}});
-    // END DEBUG
-    //this->
+    result.push_back(KernelResult());
+    NodeList nodes = this->tree_cache[tree_repr];
+    this->compute_kernel(nodes, nodes, result.back());
   }
 }
 
@@ -52,13 +47,15 @@ void SymbolAwareSubsetTreeKernel::Kdiag(const vector<string> &trees,
 void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList &nodes1,
 						 const NodeList &nodes2,
 						 KernelResult &kernel_result){
-
+  kernel_result.k = 6.0;
+  kernel_result.dlambda = {0.0};
+  kernel_result.dalpha = {0.0};
 }
 
 
 
 void SymbolAwareSubsetTreeKernel::delta(const IDPair &id_pair, const NodeList &nodes1,
 					const NodeList &nodes2, double* delta_matrix,
-					double* dlambda_tensor, double* dsigma_tensor){
+					double* dlambda_tensor, double* dalpha_tensor){
 
 }
