@@ -14,10 +14,12 @@ struct KernelResult{
   KernelResult(){};
   KernelResult(int lambda_size, int alpha_size){
     this->k = 0.0;
-    for (int i = 0; i < lambda_size; ++i)
-      this->dlambda.push_back(0.0);
-    for (int i = 0; i < alpha_size; ++i)
-      this->dalpha.push_back(0.0);
+    this->dlambda.assign(lambda_size, 0.0);
+    this->dalpha.assign(alpha_size, 0.0);
+    //for (int i = 0; i < lambda_size; ++i)
+    //  this->dlambda.push_back(0.0);
+    //for (int i = 0; i < alpha_size; ++i)
+    //  this->dalpha.push_back(0.0);
   };
 };
 

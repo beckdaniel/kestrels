@@ -127,7 +127,7 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
   //kernel_result.k = 6.0;
   //kernel_result.dlambda = {0.0};
   //kernel_result.dalpha = {0.0};
-  cout << id_pair.first << " " << id_pair.second << endl;
+  //cout << id_pair.first << " " << id_pair.second << endl;
   // END DEBUG
 
   int id1 = id_pair.first;
@@ -147,7 +147,7 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
       temp_result.dalpha[i] = dalpha_tensor[index * alpha_size + i];
     return;
   }
-  
+
   // BASE CASE: found a preterminal
   Node* node1 = nodes1[id1];
   //int lambda_index = node1.lambda_index TODO
@@ -166,11 +166,14 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
 	temp_result.dlambda[i] = 0;
       }
     }
-    for (int i = 0; i < alpha_size; ++i)
-      temp_result.dalpha[index * alpha_size + i] = 0;
+    temp_result.dalpha.assign(alpha_size, 0);
     return;
   }
-
   
-
+  // RECURSIVE CASE: if val == 0, then we proceed the recursion
+  Node* node2 = nodes2[id2];
+  double prod = 1;
+  double sum_lambda = 0;
+  double sum_alpha = 0;
+  double g = 0;
 }
