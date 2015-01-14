@@ -8,7 +8,7 @@ SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<double> &l
 							 bool normalize){
   this->normalize = normalize;
   this->lambda = vector<double>(lambda);
-  this->alpha.push_back(0.0);
+  this->alpha.push_back(1.0);
 }
 
 SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<double> &lambda, 
@@ -140,7 +140,7 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
 
   // RECURSIVE CASE: get value from DP matrix if it was calculated before
   if (val > 0){
-    temp_result.k = 0;
+    temp_result.k = val;
     for (int i = 0; i < lambda_size; ++i)
       temp_result.dlambda[i] = dlambda_tensor[index * lambda_size + i];
     for (int i = 0; i < alpha_size; ++i)

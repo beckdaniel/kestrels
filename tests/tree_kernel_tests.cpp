@@ -4,24 +4,27 @@
 #include "../tree/tree_kernel.hpp"
 
 #define SASSTK SymbolAwareSubsetTreeKernel
+#define TOLERANCE 0.0001
 
 using namespace std;
 
 struct SimpleTree{
   SimpleTree() {
     trees.push_back("(S (AA a) (B b))");
+    tol = TOLERANCE;
   };
   ~SimpleTree() {};
 
   vector<string> trees;
   vector<KernelResult> result;
+  double tol;
 };
 
 BOOST_FIXTURE_TEST_CASE(kdiag1, SimpleTree){
   vector<double> lambda = {1.0};
   SASSTK kernel = SASSTK(lambda, false);
   kernel.Kdiag(trees, result);
-  BOOST_CHECK_EQUAL(result[0].k, 6);
+  BOOST_CHECK_CLOSE(result[0].k, 6, tol);
 };
 
 BOOST_FIXTURE_TEST_CASE(kdiag2, SimpleTree){
@@ -29,7 +32,7 @@ BOOST_FIXTURE_TEST_CASE(kdiag2, SimpleTree){
   vector<double> alpha = {0.0, 1.0};
   SASSTK kernel = SASSTK(lambda, alpha, false);
   kernel.Kdiag(trees, result);
-  BOOST_CHECK_EQUAL(result[0].k, 3);
+  BOOST_CHECK_CLOSE(result[0].k, 3, tol);
 }
 
 BOOST_FIXTURE_TEST_CASE(kdiag3, SimpleTree){
@@ -37,7 +40,7 @@ BOOST_FIXTURE_TEST_CASE(kdiag3, SimpleTree){
   vector<double> alpha = {0.2, 1.0};
   SASSTK kernel = SASSTK(lambda, alpha, false);
   kernel.Kdiag(trees, result);
-  BOOST_CHECK_EQUAL(result[0].k, 3.44);
+  BOOST_CHECK_CLOSE(result[0].k, 3.44, tol);
 }
 
 BOOST_FIXTURE_TEST_CASE(kdiag4, SimpleTree){
@@ -45,5 +48,5 @@ BOOST_FIXTURE_TEST_CASE(kdiag4, SimpleTree){
   vector<double> alpha = {1.0, 1.0};
   SASSTK kernel = SASSTK(lambda, alpha, false);
   kernel.Kdiag(trees, result);
-  BOOST_CHECK_EQUAL(result[0].k, 2.736);
+  BOOST_CHECK_CLOSE(result[0].k, 2.736, tol);
 }
