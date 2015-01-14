@@ -68,9 +68,10 @@ void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList& nodes1,
   }
   vector<IDPair> id_pairs;
   this->get_node_pairs(nodes1, nodes2, id_pairs);
+  KernelResult temp_result;
   BOOST_FOREACH(IDPair id_pair, id_pairs){
-    this->delta(id_pair, nodes1, nodes2, kernel_result, delta_matrix,
-		dlambda_tensor, dalpha_tensor);
+    this->delta(id_pair, nodes1, nodes2, kernel_result, temp_result,
+		delta_matrix, dlambda_tensor, dalpha_tensor);
   }
   free(delta_matrix);
   free(dlambda_tensor);
@@ -120,12 +121,26 @@ void SymbolAwareSubsetTreeKernel::get_node_pairs(const NodeList& nodes1,
 
 void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& nodes1,
 					const NodeList& nodes2, KernelResult& kernel_result,
-					double* delta_matrix, double* dlambda_tensor,
-					double* dalpha_tensor){
+					KernelResult& temp_result, double* delta_matrix,
+					double* dlambda_tensor,	double* dalpha_tensor){
   // DEBUG
   kernel_result.k = 6.0;
   kernel_result.dlambda = {0.0};
   kernel_result.dalpha = {0.0};
   cout << id_pair.first << " " << id_pair.second << endl;
   // END DEBUG
+
+  int id1 = id_pair.first;
+  int id2 = id_pair.second;
+  int len2 = nodes2.size();
+  int lambda_size = this->lambda.size();
+  int alpha_size = this->alpha.size();
+  int index = id1 * len2 + id2;
+  double val = delta_matrix[index];
+
+  // RECURSIVE CASE: get value from DP matrix if it was calculated before
+  if (val > 0){
+    
+  }
+    
 }

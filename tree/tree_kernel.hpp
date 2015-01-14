@@ -35,7 +35,8 @@ private:
 		      std::vector<IDPair>& id_pairs);
   void delta(const IDPair& id_pair, const NodeList& nodes1,
 	     const NodeList& nodes2, KernelResult& kernel_result,
-	     double* delta_matrix, double* dlambda_tensor, double* dalpha_tensor);
+	     KernelResult& temp_result, double* delta_matrix,
+	     double* dlambda_tensor, double* dalpha_tensor);
 };
 
 #endif //TREE_KERNEL_H
