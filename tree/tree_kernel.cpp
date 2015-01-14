@@ -52,8 +52,30 @@ void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList &nodes1,
   kernel_result.dlambda = {0.0};
   kernel_result.dalpha = {0.0};
   // END DEBUG
+  int len1 = nodes1.size();
+  int len2 = nodes2.size();
+  int lambda_size = this->lambda.size();
+  int alpha_size = this->alpha.size();
+  int matrix_size = sizeof(double) * len1 * len2;
+  double* delta_matrix = (double*) malloc(matrix_size);
+  double* dlambda_tensor = (double*) malloc(matrix_size * lambda_size);
+  double* dalpha_tensor = (double*) malloc(matrix_size * alpha_size);
+  int index;
+  for (int i = 0; i < len1; ++i){
+    for (int j = 0; j < len2; ++j){
+      index = i * len1 + j;
+      delta_matrix[index] = 0;
+      for (int k = 0; k < lambda_size; ++k)
+	dlambda_tensor[index * lambda_size + k] = 0;
+      for (int k = 0; k < alpha_size; ++k)
+	dalpha_tensor[index * alpha_size + k] = 0;
+    }
+  }
 
-  //double*
+  vector<IDPair> id_pairs;
+  free(delta_matrix);
+  free(dlambda_tensor);
+  free(dalpha_tensor);
 }
 
 
