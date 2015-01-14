@@ -118,54 +118,37 @@ void Tree::parse(const string& s){
 }
 
 NodeList Tree::get_node_list(){
-  NodeList temp_list;
-  int temp = this->add_node(this, temp_list);
-  std::sort(temp_list.begin(), temp_list.end(), compare_nodes);
+  NodeList node_list;
+  int temp = this->add_node(this, node_list);
+  std::sort(node_list.begin(), node_list.end(), compare_nodes);
   map<int, int> ids_converter;
-  for (int i = 0; i < temp_list.size(); i++)
-    ids_converter[temp_list[i]->node_id] = i;
-
-  //NodeList node_list;
-  //NodeList::iterator it;
-  //for (it = temp_list.begin(); it != temp_list.end();
-  BOOST_FOREACH( Node* node, temp_list ) {
-    cout << node->to_str() << endl;
+  for (int i = 0; i < node_list.size(); i++)
+    ids_converter[node_list[i]->node_id] = i;
+  BOOST_FOREACH( Node* node, node_list ) {
     node->node_id = 0;
     for (int i = 0; i < node->children_ids.size(); i++) {
       node->children_ids[i] = ids_converter[node->children_ids[i]];
     }
-    //node_list.push_back(node);
-    //cout << node->to_str() << endl;
   }
-  //cout << "FINAL LIST" << endl;
-  //BOOST_FOREACH( Node* node, node_list ) {
-  //  cout << node->to_str() << endl;
-  //}
-  return temp_list;
+  return node_list;
 }
 
-int Tree::add_node(const Tree* tree, NodeList& temp_list){
+int Tree::add_node(const Tree* tree, NodeList& node_list){
   if (tree->children.size() == 0)
     return -1;
   stringstream production;
   production << tree->symbol;
-  //cout << production.str() << endl;
-  //cout << tree->children.size() << endl;
-
   Node* node = new Node();
   vector<Tree*>::const_iterator it;
   int ch_id;
   for (it = tree->children.begin(); it != tree->children.end(); it++){
     production << " " << (*it)->symbol;
-    //cout << production.str() << endl;
-    ch_id = this->add_node(*it, temp_list);
+    ch_id = this->add_node(*it, node_list);
     if (ch_id != -1)
       node->children_ids.push_back(ch_id);
   }
-  //cout << production.str() << endl;
   node->production = production.str();
-  node->node_id = temp_list.size();
-  //cout << node->to_str() << endl;
-  temp_list.push_back(node);
+  node->node_id = node_list.size();
+  node_list.push_back(node);
   return node->node_id;
 }
