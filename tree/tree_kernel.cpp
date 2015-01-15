@@ -5,18 +5,28 @@
 using namespace std;
 
 SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<double> &lambda, 
-							 bool normalize){
-  this->normalize = normalize;
+							 const bool normalize){
   this->lambda = vector<double>(lambda);
   this->alpha.push_back(1.0);
+  this->normalize = normalize;
 }
 
 SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<double> &lambda, 
 							 const vector<double> &alpha,
-							 bool normalize){
-  this->normalize = normalize;
+							 const bool normalize){
   this->lambda = vector<double>(lambda);
   this->alpha = vector<double>(alpha);
+  this->normalize = normalize;
+}
+
+SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<double>& lambda,
+							 const vector<double>& alpha,
+							 const bool normalize,
+							 const map<string, int>& lambda_buckets){
+  this->lambda = vector<double>(lambda);
+  this->alpha = vector<double>(alpha);
+  this->normalize = normalize;
+  this->lambda_buckets = map<string, int>(lambda_buckets);
 }
 
 void SymbolAwareSubsetTreeKernel::build_cache(const vector<string> &trees){

@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <map>
 #include "tree.hpp"
 
 typedef std::pair<int, int> IDPair;
@@ -16,10 +17,6 @@ struct KernelResult{
     this->k = 0.0;
     this->dlambda.assign(lambda_size, 0.0);
     this->dalpha.assign(alpha_size, 0.0);
-    //for (int i = 0; i < lambda_size; ++i)
-    //  this->dlambda.push_back(0.0);
-    //for (int i = 0; i < alpha_size; ++i)
-    //  this->dalpha.push_back(0.0);
   };
 };
 
@@ -28,11 +25,15 @@ public:
   bool normalize;
   std::vector<double> lambda;
   std::vector<double> alpha;
+  std::map<std::string, int> lambda_buckets;
   std::unordered_map<std::string, NodeList> tree_cache;
 
-  SymbolAwareSubsetTreeKernel(const std::vector<double>& lambda, bool normalize);
+  SymbolAwareSubsetTreeKernel(const std::vector<double>& lambda, const bool normalize);
   SymbolAwareSubsetTreeKernel(const std::vector<double>& lambda,
-			      const std::vector<double>& alpha, bool normalize);
+			      const std::vector<double>& alpha, const bool normalize);
+  SymbolAwareSubsetTreeKernel(const std::vector<double>& lambda,
+			      const std::vector<double>& alpha, const bool normalize,
+			      const std::map<std::string, int>& lambda_buckets);
   void Kdiag(const std::vector<std::string>& trees,
 	     std::vector<KernelResult>& result);
   void compute_kernel(const NodeList& nodes1, const NodeList& nodes2,
