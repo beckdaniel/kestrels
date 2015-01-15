@@ -2,6 +2,8 @@
 #define BOOST_TEST_MODULE tree_kernel test
 #include <boost/test/unit_test.hpp>
 #include "../tree/tree_kernel.hpp"
+#include <vector>
+#include <map>
 
 #define SASSTK SymbolAwareSubsetTreeKernel
 #define TOLERANCE 0.0001
@@ -49,4 +51,21 @@ BOOST_FIXTURE_TEST_CASE(kdiag4, SimpleTree){
   SASSTK kernel = SASSTK(lambda, alpha, false);
   kernel.Kdiag(trees, result);
   BOOST_CHECK_CLOSE(result[0].k, 2.736, tol);
+}
+
+BOOST_FIXTURE_TEST_CASE(kdiag5, SimpleTree){
+  vector<double> lambda = {0.2, 0.5};
+  vector<double> alpha = {1.0, 1.0};
+  SASSTK kernel = SASSTK(lambda, alpha, false);
+  kernel.Kdiag(trees, result);
+  BOOST_CHECK_CLOSE(result[0].k, 0.688, tol);
+}
+
+BOOST_FIXTURE_TEST_CASE(kdiag_buckets1, SimpleTree){
+  vector<double> lambda = {1.0, 0.6};
+  vector<double> alpha = {1.0, 1.0};
+  map<string, int> lambda_buckets {{"AA", 1}};
+  SASSTK kernel = SASSTK(lambda, alpha, false, lambda_buckets);
+  kernel.Kdiag(trees, result);
+  BOOST_CHECK_CLOSE(result[0].k, 4.8, tol);
 }

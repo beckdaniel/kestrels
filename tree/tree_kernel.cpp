@@ -123,13 +123,6 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
 					const NodeList& nodes2, KernelResult& kernel_result,
 					KernelResult& temp_result, double* delta_matrix,
 					double* dlambda_tensor,	double* dalpha_tensor){
-  // DEBUG
-  //kernel_result.k = 6.0;
-  //kernel_result.dlambda = {0.0};
-  //kernel_result.dalpha = {0.0};
-  //cout << id_pair.first << " " << id_pair.second << endl;
-  // END DEBUG
-
   int id1 = id_pair.first;
   int id2 = id_pair.second;
   int len2 = nodes2.size();
