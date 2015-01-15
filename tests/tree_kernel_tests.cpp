@@ -10,6 +10,10 @@
 
 using namespace std;
 
+/****************************
+Tests using Kdiag on a simple tree
+****************************/
+
 struct SimpleTree{
   SimpleTree() {
     trees.push_back("(S (AA a) (B b))");
@@ -87,3 +91,20 @@ BOOST_FIXTURE_TEST_CASE(kdiag_buckets3, SimpleTree){
   kernel.Kdiag(trees, result);
   BOOST_CHECK_CLOSE(result[0].k, 2.72, tol);
 }
+
+/****************************
+Tests using Kdiag on a not so simple tree
+****************************/
+
+struct SimpleTree2{
+  SimpleTree2() {
+    trees.push_back("(S (AA (AA a)) (B b))");
+    tol = TOLERANCE;
+  };
+  ~SimpleTree2() {};
+
+  vector<string> trees;
+  vector<KernelResult> result;
+  double tol;
+};
+
