@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <exception>
+#include <map>
 
 typedef std::vector<int> ChildrenIDs;
 
@@ -11,8 +12,13 @@ struct Node{
   std::string production;
   int node_id;
   ChildrenIDs children_ids;
+  int lambda_index;
   Node(){};
-  Node(const std::string& s){this->production = s; this->node_id = 0;};
+  Node(const std::string& s){
+    this->production = s;
+    this->node_id = 0;
+    this->lambda_index = 0;
+  };
   std::string to_str();
 };
 
@@ -37,10 +43,12 @@ public:
   Tree(const std::string& s);
   std::string to_str();
   void parse(const std::string& s);
-  void get_node_list(NodeList& node_list);
+  void get_node_list(NodeList& node_list,
+		     std::map<std::string, int>& lambda_buckets);
 
 private:
-  int add_node(const Tree* tree, NodeList& node_list);
+  int add_node(const Tree* tree, NodeList& node_list,
+	       std::map<std::string, int>& lambda_buckets);
 
 };
 

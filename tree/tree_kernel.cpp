@@ -36,7 +36,7 @@ void SymbolAwareSubsetTreeKernel::build_cache(const vector<string> &trees){
     } catch (out_of_range) {
       Tree tree = Tree(tree_repr);
       NodeList nodes;
-      tree.get_node_list(nodes);
+      tree.get_node_list(nodes, this->lambda_buckets);
       this->tree_cache[tree_repr] = nodes;
     }
   }
@@ -153,8 +153,7 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
 
   // BASE CASE: found a preterminal
   Node* node1 = nodes1[id1];
-  //int lambda_index = node1.lambda_index TODO
-  int lambda_index = 0;
+  int lambda_index = node1->lambda_index;
   if (node1->children_ids.empty()){
     delta_matrix[index] = this->lambda[lambda_index];
     temp_result.k = this->lambda[lambda_index];
@@ -185,7 +184,7 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
   vec_alpha.assign(alpha_size, 0);
   ChildrenIDs children1 = node1->children_ids;
   ChildrenIDs children2 = node2->children_ids;
-  //int alpha_index = node1.alpha_index TODO
+  //int alpha_index = node1.alpha_index; // TODO
   int alpha_index = 0;
   IDPair child_pair;
   for (int i = 0; i < children1.size(); ++i){
