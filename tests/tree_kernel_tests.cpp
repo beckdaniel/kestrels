@@ -108,3 +108,33 @@ struct SimpleTree2{
   double tol;
 };
 
+BOOST_FIXTURE_TEST_CASE(kdiag_2_1, SimpleTree2){
+  vector<double> lambda = {1.0};
+  SASSTK kernel = SASSTK(lambda, false);
+  kernel.Kdiag(trees, result);
+  BOOST_CHECK_CLOSE(result[0].k, 10, tol);
+};
+
+BOOST_FIXTURE_TEST_CASE(kdiag_2_2, SimpleTree2){
+  vector<double> lambda = {1.0, 0.5};
+  vector<double> alpha = {0.0, 1.0};
+  SASSTK kernel = SASSTK(lambda, alpha, false);
+  kernel.Kdiag(trees, result);
+  BOOST_CHECK_CLOSE(result[0].k, 4, tol);
+};
+
+BOOST_FIXTURE_TEST_CASE(kdiag_2_3, SimpleTree2){
+  vector<double> lambda = {1.0};
+  vector<double> alpha = {0.2};
+  SASSTK kernel = SASSTK(lambda, alpha, false);
+  kernel.Kdiag(trees, result);
+  BOOST_CHECK_CLOSE(result[0].k, 4.88, tol);
+};
+
+BOOST_FIXTURE_TEST_CASE(kdiag_2_4, SimpleTree2){
+  vector<double> lambda = {0.6, 0.5};
+  vector<double> alpha = {1.0, 1.0};
+  SASSTK kernel = SASSTK(lambda, alpha, false);
+  kernel.Kdiag(trees, result);
+  BOOST_CHECK_CLOSE(result[0].k, 4.0416, tol);
+};
