@@ -80,7 +80,7 @@ BOOST_FIXTURE_TEST_CASE(kdiag_buckets2, SimpleTree){
   map<string, int> lambda_buckets {{"AA", 1}, {"B", 2}};
   SASSTK kernel = SASSTK(lambda, alpha, false, lambda_buckets);
   kernel.Kdiag(trees, result);
-  //BOOST_CHECK_CLOSE(result[0].k, 2.72, tol);
+  BOOST_CHECK_CLOSE(result[0].k, 2.72, tol);
 }
 
 BOOST_FIXTURE_TEST_CASE(kdiag_buckets3, SimpleTree){
