@@ -1,5 +1,6 @@
 #include <boost/foreach.hpp>
 #include <iostream>
+#include <cmath>
 #include "tree_kernel.hpp"
 
 using namespace std;
@@ -79,15 +80,21 @@ void SymbolAwareSubsetTreeKernel::K(const vector<string>& trees1,
   for (int i = 0; i < size1; ++i)
     result[i].assign(size2, KernelResult(this->lambda.size(), this->alpha.size()));
 
-  // Obtain the diagonal values for normalization (TODO: skippping for now)
+  // Obtain the diagonal values for normalization
+  VecResult diags1, diags2;
+  this->Kdiag(trees1, diags1);
+  if (gram) {
+    diags2 = VecResult(diags1);
+  } else {
+    this->Kdiag(trees2, diags2);
+  }
 
   // Iterate over the two sets of trees
   for (int i = 0; i < size1; ++i){
     for (int j = 0; j < size2; ++j){
       if (gram){
-	if (i < j){ // this might be a bit unsafe...
-	  result[i][j].k = result[j][i].k;
-	}
+	if (i < j) // symmetric matrix
+	  continue;
 	if ((i == j) && (this->normalize)) {
 	  result[i][j].k = 1.0;
 	  result[i][j].dlambda.assign(this->lambda.size(), 0.0);
@@ -98,6 +105,13 @@ void SymbolAwareSubsetTreeKernel::K(const vector<string>& trees1,
       NodeList nodes1 = this->tree_cache[trees1[i]];
       NodeList nodes2 = this->tree_cache[trees2[j]];
       this->compute_kernel(nodes1, nodes2, result[i][j]);
+      if (this->normalize)
+	this->compute_normalization(diags1[i], diags2[j], result[i][j]);
+      if (gram) { // symmetric matrix
+	result[j][i].k = result[i][j].k;
+	result[j][i].dlambda = vector<double>(result[i][j].dlambda);
+	result[j][i].dalpha = vector<double>(result[i][j].dalpha);
+      }
     }
   }
 }
@@ -289,3 +303,25 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
   }
 }
 
+void SymbolAwareSubsetTreeKernel::compute_normalization(const KernelResult& diag_i,
+							const KernelResult& diag_j,
+							KernelResult& norm_result){
+  double norm = diag_i.k * diag_j.k;
+  double sqrt_norm = sqrt(norm);
+  norm_result.k /= sqrt_norm;
+  double diff_lambda, diff_alpha;
+  for (int k = 0; k < this->lambda.size(); ++k){
+    diff_lambda = ((diag_i.dlambda[k] * diag_j.k) +
+		   (diag_i.k * diag_j.dlambda[k]));
+    diff_lambda /= (2 * norm);
+    norm_result.dlambda[k] = ((norm_result.dlambda[k] / sqrt_norm) -
+			      (norm_result.k * diff_lambda));
+  }
+  for (int k = 0; k < this->alpha.size(); ++k){
+    diff_alpha = ((diag_i.dalpha[k] * diag_j.k) +
+		   (diag_i.k * diag_j.dalpha[k]));
+    diff_alpha /= (2 * norm);
+    norm_result.dalpha[k] = ((norm_result.dalpha[k] / sqrt_norm) -
+			      (norm_result.k * diff_alpha));
+  }
+}

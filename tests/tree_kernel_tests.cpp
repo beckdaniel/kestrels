@@ -243,3 +243,16 @@ BOOST_FIXTURE_TEST_CASE(K_5, TreePair){
   BOOST_CHECK_CLOSE(result[0][0].dalpha[0], 2.24, tol);
   BOOST_CHECK_CLOSE(result[0][0].dalpha[1], 0.8, tol);
 };
+
+/***************************
+ Tests for the normalized version
+ **************************/
+
+BOOST_FIXTURE_TEST_CASE(Knorm_1, TreePair){
+  vector<double> lambda = {1.0};
+  SASSTK kernel = SASSTK(lambda, true);
+  kernel.K(trees1, trees2, result);
+  BOOST_CHECK_CLOSE(result[0][0].k, 0.6, tol);
+  BOOST_CHECK_CLOSE(result[0][0].dlambda[0], -0.2, tol);
+  BOOST_CHECK_CLOSE(result[0][0].dalpha[0], 0.12, tol);
+};

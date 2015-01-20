@@ -59,6 +59,9 @@ private:
 	     const NodeList& nodes2, KernelResult& kernel_result,
 	     KernelResult& temp_result, double* delta_matrix,
 	     double* dlambda_tensor, double* dalpha_tensor);
+  void compute_normalization(const KernelResult& diag_i,
+			     const KernelResult& diag_j,
+			     KernelResult& norm_result);
 };
 
 #endif //TREE_KERNEL_H
