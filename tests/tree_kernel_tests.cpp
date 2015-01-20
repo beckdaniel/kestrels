@@ -139,7 +139,7 @@ BOOST_FIXTURE_TEST_CASE(kdiag_2_4, SimpleTree2){
   BOOST_CHECK_CLOSE(result[0].k, 4.0416, tol);
 };
 
-BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets1, SimpleTree){
+BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets1, SimpleTree2){
   vector<double> lambda = {1.0, 0.6};
   vector<double> alpha = {1.0, 1.0};
   map<string, int> lambda_buckets {{"AA", 1}};
@@ -148,7 +148,7 @@ BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets1, SimpleTree){
   BOOST_CHECK_CLOSE(result[0].k, 6.48, tol);
 };
 
-BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets2, SimpleTree){
+BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets2, SimpleTree2){
   vector<double> lambda = {1.0, 0.6, 0.2};
   vector<double> alpha = {1.0};
   map<string, int> lambda_buckets {{"AA", 1}, {"B", 2}};
@@ -157,7 +157,7 @@ BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets2, SimpleTree){
   BOOST_CHECK_CLOSE(result[0].k, 4.112, tol);
 };
 
-BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets3, SimpleTree){
+BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets3, SimpleTree2){
   vector<double> lambda = {1.0, 0.6, 0.2, 1};
   vector<double> alpha = {1.0};
   map<string, int> lambda_buckets {{"AA", 1}, {"B", 2}, {"S", 3}};
@@ -166,7 +166,7 @@ BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets3, SimpleTree){
   BOOST_CHECK_CLOSE(result[0].k, 4.112, tol);
 };
 
-BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets4, SimpleTree){
+BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets4, SimpleTree2){
   vector<double> lambda = {1.0, 0.6, 0.2};
   vector<double> alpha = {1.0, 0.3};
   map<string, int> lambda_buckets {{"AA", 1}, {"B", 2}};
