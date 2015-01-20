@@ -29,6 +29,19 @@ SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<double>& l
   this->lambda_buckets = map<string, int>(lambda_buckets);
 }
 
+SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<double>& lambda,
+							 const vector<double>& alpha,
+							 const bool normalize,
+							 const map<string, int>& lambda_buckets,
+							 const map<string, int>& alpha_buckets){
+  this->lambda = vector<double>(lambda);
+  this->alpha = vector<double>(alpha);
+  this->normalize = normalize;
+  this->lambda_buckets = map<string, int>(lambda_buckets);
+  this->alpha_buckets = map<string, int>(alpha_buckets);
+}
+
+
 void SymbolAwareSubsetTreeKernel::build_cache(const vector<string> &trees){
   BOOST_FOREACH(string tree_repr, trees){
     try {

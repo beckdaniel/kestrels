@@ -138,3 +138,40 @@ BOOST_FIXTURE_TEST_CASE(kdiag_2_4, SimpleTree2){
   kernel.Kdiag(trees, result);
   BOOST_CHECK_CLOSE(result[0].k, 4.0416, tol);
 };
+
+BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets1, SimpleTree){
+  vector<double> lambda = {1.0, 0.6};
+  vector<double> alpha = {1.0, 1.0};
+  map<string, int> lambda_buckets {{"AA", 1}};
+  SASSTK kernel = SASSTK(lambda, alpha, false, lambda_buckets);
+  kernel.Kdiag(trees, result);
+  BOOST_CHECK_CLOSE(result[0].k, 6.48, tol);
+};
+
+BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets2, SimpleTree){
+  vector<double> lambda = {1.0, 0.6, 0.2};
+  vector<double> alpha = {1.0};
+  map<string, int> lambda_buckets {{"AA", 1}, {"B", 2}};
+  SASSTK kernel = SASSTK(lambda, alpha, false, lambda_buckets);
+  kernel.Kdiag(trees, result);
+  BOOST_CHECK_CLOSE(result[0].k, 4.112, tol);
+};
+
+BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets3, SimpleTree){
+  vector<double> lambda = {1.0, 0.6, 0.2, 1};
+  vector<double> alpha = {1.0};
+  map<string, int> lambda_buckets {{"AA", 1}, {"B", 2}, {"S", 3}};
+  SASSTK kernel = SASSTK(lambda, alpha, false, lambda_buckets);
+  kernel.Kdiag(trees, result);
+  BOOST_CHECK_CLOSE(result[0].k, 4.112, tol);
+};
+
+BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets4, SimpleTree){
+  vector<double> lambda = {1.0, 0.6, 0.2};
+  vector<double> alpha = {1.0, 0.3};
+  map<string, int> lambda_buckets {{"AA", 1}, {"B", 2}};
+  map<string, int> alpha_buckets {{"S", 1}};
+  SASSTK kernel = SASSTK(lambda, alpha, false, lambda_buckets, alpha_buckets);
+  kernel.Kdiag(trees, result);
+  BOOST_CHECK_CLOSE(result[0].k, 2.39, tol);
+};
