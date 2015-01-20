@@ -116,9 +116,10 @@ void Tree::parse(const string& s){
 }
 
 void Tree::get_node_list(NodeList& node_list, 
-			 map<string, int>& lambda_buckets){
+			 map<string, int>& lambda_buckets,
+			 map<string, int>& alpha_buckets){
   //NodeList node_list;
-  int temp = this->add_node(this, node_list, lambda_buckets);
+  int temp = this->add_node(this, node_list, lambda_buckets, alpha_buckets);
   std::sort(node_list.begin(), node_list.end(), compare_nodes);
   map<int, int> ids_converter;
   for (int i = 0; i < node_list.size(); i++)
@@ -133,7 +134,8 @@ void Tree::get_node_list(NodeList& node_list,
 }
 
 int Tree::add_node(const Tree* tree, NodeList& node_list,
-		   map<string, int>& lambda_buckets){
+		   map<string, int>& lambda_buckets,
+		   map<string, int>& alpha_buckets){
   if (tree->children.size() == 0)
     return -1;
   stringstream production;
@@ -144,10 +146,16 @@ int Tree::add_node(const Tree* tree, NodeList& node_list,
   } catch (out_of_range) {
     node->lambda_index = 0;
   }
+  try {
+    node->alpha_index = alpha_buckets.at(tree->symbol);
+  } catch (out_of_range) {
+    node->alpha_index = 0;
+  }
   int ch_id;
   BOOST_FOREACH( Tree* child, tree->children ){
     production << " " << child->symbol;
-    ch_id = this->add_node(child, node_list, lambda_buckets);
+    ch_id = this->add_node(child, node_list, lambda_buckets,
+			   alpha_buckets);
     if (ch_id != -1)
       node->children_ids.push_back(ch_id);
   }

@@ -49,7 +49,7 @@ void SymbolAwareSubsetTreeKernel::build_cache(const vector<string> &trees){
     } catch (out_of_range) {
       Tree tree = Tree(tree_repr);
       NodeList nodes;
-      tree.get_node_list(nodes, this->lambda_buckets);
+      tree.get_node_list(nodes, this->lambda_buckets, this->alpha_buckets);
       this->tree_cache[tree_repr] = nodes;
     }
   }
@@ -197,8 +197,7 @@ void SymbolAwareSubsetTreeKernel::delta(const IDPair& id_pair, const NodeList& n
   vec_alpha.assign(alpha_size, 0);
   ChildrenIDs children1 = node1->children_ids;
   ChildrenIDs children2 = node2->children_ids;
-  //int alpha_index = node1.alpha_index; // TODO
-  int alpha_index = 0;
+  int alpha_index = node1->alpha_index;
   IDPair child_pair;
   for (int i = 0; i < children1.size(); ++i){
     child_pair = {children1[i], children2[i]};
