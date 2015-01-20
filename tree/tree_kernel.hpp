@@ -20,6 +20,8 @@ struct KernelResult{
   };
 };
 
+typedef std::vector<KernelResult> VecResult;
+
 class SymbolAwareSubsetTreeKernel{
 public:
   bool normalize;
@@ -41,12 +43,16 @@ public:
 			      const std::map<std::string, int>& alpha_buckets);
   void Kdiag(const std::vector<std::string>& trees,
 	     std::vector<KernelResult>& result);
-  void compute_kernel(const NodeList& nodes1, const NodeList& nodes2,
-		      KernelResult& kernel_result);
-
+  void K(const std::vector<std::string>& trees,
+	 std::vector<VecResult>& result);
+  void K(const std::vector<std::string>& trees1,
+	 const std::vector<std::string>& trees2,
+	 std::vector<VecResult>& result);
 
 private:
   void build_cache(const std::vector<std::string>& trees);
+  void compute_kernel(const NodeList& nodes1, const NodeList& nodes2,
+		      KernelResult& kernel_result);
   void get_node_pairs(const NodeList& nodes1, const NodeList& nodes2,
 		      std::vector<IDPair>& id_pairs);
   void delta(const IDPair& id_pair, const NodeList& nodes1,

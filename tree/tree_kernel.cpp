@@ -41,8 +41,56 @@ SymbolAwareSubsetTreeKernel::SymbolAwareSubsetTreeKernel(const vector<double>& l
   this->alpha_buckets = map<string, int>(alpha_buckets);
 }
 
+void SymbolAwareSubsetTreeKernel::Kdiag(const vector<string>& trees,
+					vector<KernelResult>& result){
+  this->build_cache(trees);
+  BOOST_FOREACH(string tree_repr, trees){
+    result.push_back(KernelResult(this->lambda.size(), this->alpha.size()));
+    NodeList nodes = this->tree_cache[tree_repr];
+    this->compute_kernel(nodes, nodes, result.back());
+  }
+}
 
-void SymbolAwareSubsetTreeKernel::build_cache(const vector<string> &trees){
+void SymbolAwareSubsetTreeKernel::K(const vector<string>& trees,
+				    vector<VecResult>& result){
+  vector<string> empty;
+  this->K(trees, empty, result);
+}
+
+void SymbolAwareSubsetTreeKernel::K(const vector<string>& trees1,
+				    const vector<string>& trees2,
+				    vector<VecResult>& result){
+  // Build caches and check if we are calculating a gram matrix.
+  int size1 = trees1.size();
+  int size2;
+  this->build_cache(trees1);
+  bool gram = false;
+  if (trees2.empty()){
+    gram = true;
+    size2 = trees1.size();
+  }
+  else {
+    this->build_cache(trees2);
+    size2 = trees2.size();
+  }
+
+  // Allocate the result matrix
+  result.assign(trees1.size(), VecResult());
+  for (int i = 0; i < trees1.size(); ++i)
+    result[i].assign(trees2.size(), KernelResult());
+
+  // TEST
+  result[0][0].k = 6;
+  return;
+
+  
+  // Obtain the diagonal values for normalization (TODO: skippping for now)
+
+  // Iterate over the two sets of trees
+}
+
+
+void SymbolAwareSubsetTreeKernel::build_cache(const vector<string>& trees){
   BOOST_FOREACH(string tree_repr, trees){
     try {
       this->tree_cache.at(tree_repr);
@@ -54,18 +102,6 @@ void SymbolAwareSubsetTreeKernel::build_cache(const vector<string> &trees){
     }
   }
 }
-
-
-void SymbolAwareSubsetTreeKernel::Kdiag(const vector<string>& trees,
-					vector<KernelResult>& result){
-  this->build_cache(trees);
-  BOOST_FOREACH(string tree_repr, trees){
-    result.push_back(KernelResult(this->lambda.size(), this->alpha.size()));
-    NodeList nodes = this->tree_cache[tree_repr];
-    this->compute_kernel(nodes, nodes, result.back());
-  }
-}
-
 
 void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList& nodes1,
 						 const NodeList& nodes2,

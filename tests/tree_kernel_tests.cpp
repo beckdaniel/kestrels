@@ -175,3 +175,28 @@ BOOST_FIXTURE_TEST_CASE(kdiag_2_buckets4, SimpleTree2){
   kernel.Kdiag(trees, result);
   BOOST_CHECK_CLOSE(result[0].k, 2.39, tol);
 };
+
+/*************************
+Tests for K on a pair of different trees
+ *************************/
+
+struct TreePair{
+  TreePair() {
+    trees1.push_back("(S (AA (AA a)) (B b))");
+    trees2.push_back("(S (AA (AA a)) (B c))");
+    tol = TOLERANCE;
+  };
+  ~TreePair() {};
+
+  vector<string> trees1;
+  vector<string> trees2;
+  vector<VecResult> result;
+  double tol;
+};
+
+BOOST_FIXTURE_TEST_CASE(K_1, TreePair){
+  vector<double> lambda = {1.0};
+  SASSTK kernel = SASSTK(lambda, false);
+  kernel.K(trees1, trees2, result);
+  BOOST_CHECK_CLOSE(result[0][0].k, 6, tol);
+};
