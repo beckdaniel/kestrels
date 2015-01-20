@@ -200,3 +200,31 @@ BOOST_FIXTURE_TEST_CASE(K_1, TreePair){
   kernel.K(trees1, trees2, result);
   BOOST_CHECK_CLOSE(result[0][0].k, 6, tol);
 };
+
+BOOST_FIXTURE_TEST_CASE(K_2, TreePair){
+  vector<double> lambda = {1.0, 1.0};
+  vector<double> alpha = {0.2};
+  SASSTK kernel = SASSTK(lambda, alpha, false);
+  kernel.K(trees1, trees2, result);
+  BOOST_CHECK_CLOSE(result[0][0].k, 2.48, tol);
+};
+
+BOOST_FIXTURE_TEST_CASE(K_3, TreePair){
+  vector<double> lambda = {1.0, 0.5};
+  vector<double> alpha = {0.2};
+  map<string, int> lambda_buckets {{"AA", 1}};
+  SASSTK kernel = SASSTK(lambda, alpha, false, lambda_buckets);
+  kernel.K(trees1, trees2, result);
+  BOOST_CHECK_CLOSE(result[0][0].k, 0.96, tol);
+};
+
+BOOST_FIXTURE_TEST_CASE(K_4, TreePair){
+  vector<double> lambda = {1.0, 0.5};
+  vector<double> alpha = {1.0, 0.2};
+  map<string, int> lambda_buckets {{"AA", 1}};
+  map<string, int> alpha_buckets {{"AA", 1}};
+  SASSTK kernel = SASSTK(lambda, alpha, false, lambda_buckets, alpha_buckets);
+  kernel.K(trees1, trees2, result);
+  BOOST_CHECK_CLOSE(result[0][0].k, 2.2, tol);
+};
+
