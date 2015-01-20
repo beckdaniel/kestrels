@@ -75,18 +75,31 @@ void SymbolAwareSubsetTreeKernel::K(const vector<string>& trees1,
   }
 
   // Allocate the result matrix
-  result.assign(trees1.size(), VecResult());
-  for (int i = 0; i < trees1.size(); ++i)
-    result[i].assign(trees2.size(), KernelResult());
+  result.assign(size1, VecResult());
+  for (int i = 0; i < size1; ++i)
+    result[i].assign(size2, KernelResult(this->lambda.size(), this->alpha.size()));
 
-  // TEST
-  result[0][0].k = 6;
-  return;
-
-  
   // Obtain the diagonal values for normalization (TODO: skippping for now)
 
   // Iterate over the two sets of trees
+  for (int i = 0; i < size1; ++i){
+    for (int j = 0; j < size2; ++j){
+      if (gram){
+	if (i < j){ // this might be a bit unsafe...
+	  result[i][j].k = result[j][i].k;
+	}
+	if ((i == j) && (this->normalize)) {
+	  result[i][j].k = 1.0;
+	  result[i][j].dlambda.assign(this->lambda.size(), 0.0);
+	  result[i][j].dalpha.assign(this->alpha.size(), 0.0);
+	}
+      }
+
+      NodeList nodes1 = this->tree_cache[trees1[i]];
+      NodeList nodes2 = this->tree_cache[trees2[j]];
+      this->compute_kernel(nodes1, nodes2, result[i][j]);
+    }
+  }
 }
 
 
