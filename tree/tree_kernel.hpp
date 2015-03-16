@@ -29,7 +29,6 @@ public:
   std::vector<double> alpha;
   std::map<std::string, int> lambda_buckets;
   std::map<std::string, int> alpha_buckets;
-  std::unordered_map<std::string, NodeList> tree_cache;
 
   SymbolAwareSubsetTreeKernel(const std::vector<double>& lambda, const bool normalize);
   SymbolAwareSubsetTreeKernel(const std::vector<double>& lambda,
@@ -50,6 +49,7 @@ public:
 	 std::vector<VecResult>& result);
 
 private:
+  std::unordered_map<std::string, NodeList> tree_cache;
   void build_cache(const std::vector<std::string>& trees);
   void compute_kernel(const NodeList& nodes1, const NodeList& nodes2,
 		      KernelResult& kernel_result);
