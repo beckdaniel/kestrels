@@ -92,6 +92,7 @@ void SymbolAwareSubsetTreeKernel::K(const vector<string>& trees1,
   }
 
   // Iterate over the two sets of trees
+  string tree1, tree2;
   for (int i = 0; i < size1; ++i){
     for (int j = 0; j < size2; ++j){
       if (gram){
@@ -101,22 +102,28 @@ void SymbolAwareSubsetTreeKernel::K(const vector<string>& trees1,
 	  result[i][j].k = 1.0;
 	  result[i][j].dlambda.assign(this->lambda.size(), 0.0);
 	  result[i][j].dalpha.assign(this->alpha.size(), 0.0);
-	  continue;
+	  //continue;
 	}
       }
+      
+      tree1 = trees1[i];
+      if (gram)
+	tree2 = trees1[j];
+      else
+	tree2 = trees2[j];
 
-      cout << "BEFORE KERNEL COMPUTATION" << endl;
-      cout << trees1[i] << endl;
-      cout << trees2[j] << endl;
+      //cout << "BEFORE KERNEL COMPUTATION" << endl;
+      //cout << tree1 << endl;
+      //cout << tree2 << endl;
 
-      NodeList nodes1 = this->tree_cache[trees1[i]];
-      NodeList nodes2 = this->tree_cache[trees2[j]];
+      NodeList nodes1 = this->tree_cache[tree1];
+      NodeList nodes2 = this->tree_cache[tree2];
       this->compute_kernel(nodes1, nodes2, result[i][j]);
 
-      cout << result[i][j].k << endl;
+      //cout << result[i][j].k << endl;
 
       if (this->normalize)
-	this->compute_normalization(diags1[i], diags2[j], result[i][j]);
+      this->compute_normalization(diags1[i], diags2[j], result[i][j]);
       if (gram) { // symmetric matrix
 	result[j][i].k = result[i][j].k;
 	result[j][i].dlambda = vector<double>(result[i][j].dlambda);
@@ -154,7 +161,7 @@ void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList& nodes1,
   int index;
   for (int i = 0; i < len1; ++i){
     for (int j = 0; j < len2; ++j){
-      index = i * len1 + j;
+      index = i * len2 + j;
       delta_matrix[index] = 0;
       for (int k = 0; k < lambda_size; ++k)
 	dlambda_tensor[index * lambda_size + k] = 0;
@@ -167,7 +174,7 @@ void SymbolAwareSubsetTreeKernel::compute_kernel(const NodeList& nodes1,
   KernelResult temp_result = KernelResult(lambda_size, alpha_size);
   BOOST_FOREACH(IDPair id_pair, id_pairs){
     this->delta(id_pair, nodes1, nodes2, kernel_result, temp_result,
-		delta_matrix, dlambda_tensor, dalpha_tensor);
+  		delta_matrix, dlambda_tensor, dalpha_tensor);
   }
   free(delta_matrix);
   free(dlambda_tensor);
