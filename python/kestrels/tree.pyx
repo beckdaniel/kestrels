@@ -1,10 +1,14 @@
 import numpy as np
+cimport numpy as np
 from GPy.kern import Kern
 from GPy.core.parameterization import Param
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp.map cimport map
 from libcpp cimport bool
+
+DTYPE = np.double
+ctypedef np.double_t DTYPE_t
 
 cdef extern from "tree/tree_kernel.hpp":
     cdef cppclass KernelResult:
@@ -48,6 +52,8 @@ class SASSTreeKernel(Kern):
         #self.kernel._alpha = _alpha.copy() + 1
 
     def K(self, X, X2):
+        if X2 == None:
+            X2 = X
         return self.kernel.K(X, X2)
 
     def Kdiag(self, X):
@@ -76,6 +82,8 @@ cdef class SASSTreeKernelWrapper:
         #self.kernel._lambda = _lambda.copy() + 1
         #self.kernel._sigma = _sigma.copy() + 1
 
+
+
     def K(self, X, X2):
         #return 10
         #if (X2 == None and (self._lambda == self.kernel._lambda).all() 
@@ -83,14 +91,23 @@ cdef class SASSTreeKernelWrapper:
         #    return self.result
         #self.kernel._lambda = self._lambda.copy()
         #self.kernel._sigma = self._sigma.copy()
-        result, dl, ds = self.kernel.K(X, X2)
+        
+        cdef vector[string] X_cpp = _convert_input(X)
+        cdef vector[string] X2_cpp = _convert_input(X2)
+        cdef vector[VecResult] result_cpp;
+        #for i in range(X_cpp.size()):
+        #    print X_cpp[i]
+        self.kernel.K(X_cpp, X_cpp, result_cpp)
         #result = 10
         #dl = np.array([[[0.5] * len(X)] * len(X2)])
         #ds = np.array([[[0.5] * len(X)] * len(X2)])
-        #self.result = result
+        #cdef np.ndarray[DTYPE_t, ndim=3] result = np.zeros(shape=(len(X), len(X2), 1))
+        #cdef double[:,:,:] result_view = result
+        #_convert_result(result_cpp, result_view)
         #self.dlambda = dl
         #self.dsigma = ds
-        return result
+        #return self.result
+        return 10
 
     def Kdiag(self, X):
         return 20
@@ -107,3 +124,21 @@ cdef class SASSTreeKernelWrapper:
         #self._sigma.gradient = np.array([np.sum(self.dsigma[:,:,i] * dL_dK)
         #                                 for i in range(len(self._sigma))])
         pass
+
+###################
+
+cdef vector[string] _convert_input(X):
+    cdef vector[string] X_cpp;
+    for row in X:
+        X_cpp.push_back(row[0])
+    return X_cpp
+
+cdef void _convert_result(vector[VecResult] result_cpp, double[:,:,:] result):
+    cdef VecResult vec_result
+    cdef KernelResult kernel_result
+    for i in range(result_cpp.size()):
+        vec_result = result_cpp[i]
+        for j in range(vec_result.size()):
+            kernel_result = vec_result[j]
+            result[i][j][0] = kernel_result.k
+        

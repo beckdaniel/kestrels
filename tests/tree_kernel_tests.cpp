@@ -265,3 +265,32 @@ BOOST_FIXTURE_TEST_CASE(Knorm_2, TreePair){
   BOOST_CHECK_CLOSE(result[0][0].dlambda[0], -0.2, tol);
   BOOST_CHECK_CLOSE(result[0][0].dalpha[0], 0.12, tol);
 };
+
+/*************************
+ Tests for a bigger input
+**************************/
+
+struct TreeInput{
+  TreeInput() {
+    trees.push_back("(S (NP ns) (VP v))");
+    trees.push_back("(S (NP n) (VP v))");
+    trees.push_back("(S (NP (N a)) (VP (V c)))");
+    trees.push_back("(S (NP (Det a) (N b)) (VP (V c)))");
+    trees.push_back("(S (NP (ADJ colorless) (N ideas)) (VP (V sleep) (ADV furiously)))");
+    tol = TOLERANCE;
+  };
+  ~TreeInput() {};
+
+  vector<string> trees;
+  vector<VecResult> result;
+  double tol;
+};
+
+BOOST_FIXTURE_TEST_CASE(Knorm_gram_1, TreeInput){
+  vector<double> lambda = {1.0};
+  SASSTK kernel = SASSTK(lambda, true);
+  kernel.K(trees, result);
+  BOOST_CHECK_CLOSE(result[0][0].k, 0.6, tol);
+  BOOST_CHECK_CLOSE(result[0][0].dlambda[0], -0.2, tol);
+  BOOST_CHECK_CLOSE(result[0][0].dalpha[0], 0.12, tol);
+};

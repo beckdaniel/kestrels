@@ -9,8 +9,9 @@ class SASSTreeKernelTests(unittest.TestCase):
         X = np.array([['(S (NP ns) (VP v))'],
                       ['(S (NP n) (VP v))'],
                       ['(S (NP (N a)) (VP (V c)))'],
-                      ['(S (NP (Det a) (N b)) (VP (V c)))'],
-                      ['(S (NP (ADJ colorless) (N ideas)) (VP (V sleep) (ADV furiously)))']],
+                      #['(S (NP (Det a) (N b)) (VP (V c)))'],
+                      #['(S (NP (ADJ colorless) (N ideas)) (VP (V sleep) (ADV furiously)))'],
+                      ],
                      dtype=object)
         k = SASSTreeKernel(_lambda=1)
         target = k.K(X)

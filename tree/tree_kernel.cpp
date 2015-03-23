@@ -80,6 +80,8 @@ void SymbolAwareSubsetTreeKernel::K(const vector<string>& trees1,
   for (int i = 0; i < size1; ++i)
     result[i].assign(size2, KernelResult(this->lambda.size(), this->alpha.size()));
 
+  //return;
+
   // Obtain the diagonal values for normalization
   VecResult diags1, diags2;
   this->Kdiag(trees1, diags1);
@@ -99,12 +101,20 @@ void SymbolAwareSubsetTreeKernel::K(const vector<string>& trees1,
 	  result[i][j].k = 1.0;
 	  result[i][j].dlambda.assign(this->lambda.size(), 0.0);
 	  result[i][j].dalpha.assign(this->alpha.size(), 0.0);
+	  continue;
 	}
       }
+
+      cout << "BEFORE KERNEL COMPUTATION" << endl;
+      cout << trees1[i] << endl;
+      cout << trees2[j] << endl;
 
       NodeList nodes1 = this->tree_cache[trees1[i]];
       NodeList nodes2 = this->tree_cache[trees2[j]];
       this->compute_kernel(nodes1, nodes2, result[i][j]);
+
+      cout << result[i][j].k << endl;
+
       if (this->normalize)
 	this->compute_normalization(diags1[i], diags2[j], result[i][j]);
       if (gram) { // symmetric matrix

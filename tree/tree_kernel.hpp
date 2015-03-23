@@ -9,7 +9,7 @@
 typedef std::pair<int, int> IDPair;
 
 struct KernelResult{
-  float k;
+  double k;
   std::vector<double> dlambda;
   std::vector<double> dalpha;
   KernelResult(){};
