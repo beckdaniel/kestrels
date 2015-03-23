@@ -7,6 +7,13 @@ from libcpp.map cimport map
 from libcpp cimport bool
 
 cdef extern from "tree/tree_kernel.hpp":
+    cdef cppclass KernelResult:
+        double k
+        vector[double] dlambda
+        vector[double] dalpha
+
+    ctypedef vector[KernelResult] VecResult
+
     cdef cppclass SymbolAwareSubsetTreeKernel:
         SymbolAwareSubsetTreeKernel() except +
         SymbolAwareSubsetTreeKernel(const vector[double]& _lambda, const bool normalize) except +
@@ -19,6 +26,13 @@ cdef extern from "tree/tree_kernel.hpp":
                                     const vector[double]& alpha, const bool normalize,
                                     const map[string, int]& lambda_buckets,
                                     const map[string, int]& alpha_buckets)
+        void Kdiag(const vector[string]& trees,
+                   vector[KernelResult]& result)
+        void K(const vector[string]& trees,
+               vector[VecResult]& result)
+        void K(const vector[string]& trees1,
+               const vector[string]& trees2,
+               vector[VecResult]& result)
 
 class SASSTreeKernel(Kern):
     def __init__(self, _lambda=np.array([0.5]), _alpha=np.array([1.0]), lambda_buckets={}, alpha_buckets={},
@@ -34,7 +48,7 @@ class SASSTreeKernel(Kern):
         #self.kernel._alpha = _alpha.copy() + 1
 
     def K(self, X, X2):
-        return self.kernel.k(X, X2)
+        return self.kernel.K(X, X2)
 
     def Kdiag(self, X):
         return self.kernel.Kdiag(X)
@@ -63,20 +77,20 @@ cdef class SASSTreeKernelWrapper:
         #self.kernel._sigma = _sigma.copy() + 1
 
     def K(self, X, X2):
-        return 10
+        #return 10
         #if (X2 == None and (self._lambda == self.kernel._lambda).all() 
         #    and (self._sigma == self.kernel._sigma).all()):
         #    return self.result
         #self.kernel._lambda = self._lambda.copy()
         #self.kernel._sigma = self._sigma.copy()
-        #result, dl, ds = self.kernel.K(X, X2)
+        result, dl, ds = self.kernel.K(X, X2)
         #result = 10
         #dl = np.array([[[0.5] * len(X)] * len(X2)])
         #ds = np.array([[[0.5] * len(X)] * len(X2)])
         #self.result = result
         #self.dlambda = dl
         #self.dsigma = ds
-        #return self.result
+        return result
 
     def Kdiag(self, X):
         return 20
